@@ -31,6 +31,13 @@
       <version>1.6.7</version>
     </dependency>
 
+    <!-- PDF 텍스트 추출용 Apache PDFBox -->
+    <dependency>
+      <groupId>org.apache.pdfbox</groupId>
+      <artifactId>pdfbox</artifactId>
+      <version>2.0.30</version>
+    </dependency>
+
     <!-- 테스트용 JUnit -->
     <dependency>
       <groupId>junit</groupId>
