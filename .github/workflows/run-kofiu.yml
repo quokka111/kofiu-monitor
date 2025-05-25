@@ -22,8 +22,8 @@ jobs:
     - name: Build with Maven
       run: mvn compile
 
-    - name: Run KofiuMonitor
-      run: mvn exec:java -Dexec.mainClass="com.example.kofiu.KofiuMonitor"
+    - name: Run KofiuPdfMonitor
+      run: mvn exec:java -Dexec.mainClass="com.example.kofiu.KofiuPdfMonitor"
       env:
         NAVER_USER: ${{ secrets.NAVER_USER }}
         NAVER_PASS: ${{ secrets.NAVER_PASS }}
