@@ -2,7 +2,7 @@ name: Run KofiuMonitor on Weekdays Only
 
 on:
   schedule:
-    - cron: '0 0 * * 1-5'  # 매주 월~금 오전 9시 (KST 기준)
+    - cron: '0 0 * * 1-5'  # 평일 오전 9시 (KST 기준)
   workflow_dispatch:       # 수동 실행도 가능
 
 jobs:
@@ -27,3 +27,15 @@ jobs:
       env:
         NAVER_USER: ${{ secrets.NAVER_USER }}
         NAVER_PASS: ${{ secrets.NAVER_PASS }}
+
+    - name: Configure Git
+      run: |
+        git config --global user.name "github-actions"
+        git config --global user.email "github-actions@github.com"
+
+    - name: Commit & Push latest last_version.txt
+      run: |
+        git pull
+        git add last_version.txt
+        git commit -m "Update last_version.txt [skip ci]" || echo "No changes to commit"
+        git push
