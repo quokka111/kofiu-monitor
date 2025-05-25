@@ -6,10 +6,11 @@ import javax.mail.internet.*;
 
 public class EmailSender {
     public static void send(String subject, String body) {
-        final String from = "minsuk0531@naver.com";
-        final String to = "minsuk0531@naver.com";
-        final String username = "minsuk0531@naver.com";
-        final String password = "RH4CMKFGBLFB"; // ✅ 앱 비밀번호
+        // ✅ 환경변수로부터 가져오기 (GitHub Secrets)
+        final String from = System.getenv("NAVER_USER");
+        final String to = System.getenv("NAVER_USER"); // 수신자도 동일
+        final String username = System.getenv("NAVER_USER");
+        final String password = System.getenv("NAVER_PASS");
 
         Properties props = new Properties();
         props.put("mail.smtp.auth", "true");
