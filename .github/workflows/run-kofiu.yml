@@ -1,0 +1,29 @@
+name: Run KofiuMonitor on Weekdays Only
+
+on:
+  schedule:
+    - cron: '0 0 * * 1-5'  # 매주 월~금 오전 9시 (KST 기준)
+  workflow_dispatch:       # 수동 실행도 가능
+
+jobs:
+  build-and-run:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout source code
+      uses: actions/checkout@v3
+
+    - name: Set up JDK 17
+      uses: actions/setup-java@v3
+      with:
+        distribution: 'temurin'
+        java-version: '17'
+
+    - name: Build with Maven
+      run: mvn compile
+
+    - name: Run KofiuMonitor
+      run: mvn exec:java -Dexec.mainClass="com.example.kofiu.KofiuMonitor"
+      env:
+        NAVER_USER: ${{ secrets.NAVER_USER }}
+        NAVER_PASS: ${{ secrets.NAVER_PASS }}
