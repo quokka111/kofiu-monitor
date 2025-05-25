@@ -1,0 +1,15 @@
+# 빌드 결과
+target/
+*.class
+*.jar
+
+# IDE 설정
+.idea/
+*.iml
+
+# 로그 파일
+*.log
+
+# 백업 파일
+*.bak
+*.swp
