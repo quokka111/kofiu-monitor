@@ -12,27 +12,31 @@ public class KofiuMonitor {
 
     public static void main(String[] args) {
         try {
-            // 1. 웹 페이지에서 부칙 텍스트 추출
+            // 1. 웹 페이지에서 부칙 정보 추출
             Document doc = Jsoup.connect(TARGET_URL).get();
 
-            // 공백 포함 부칙 <제XXXX-XX호, YYYY.MM.DD.> 형식 추출
-            Elements updates = doc.select(".law_text .content p:matchesOwn(부\\s*칙\\s*<제\\d{4}-\\d{2}호,\\s*\\d{4}\\.\\d{2}\\.\\d{2}\\s*>)");
+            // 부칙 제목("부      칙") + 부칙 번호/날짜("제2024-12호, 2024.12.30.")
+            Elements bls = doc.select("span.bl");
+            Elements sfons = doc.select("span.sfon");
 
-            String latestVersion = updates.isEmpty() ? "" : updates.first().text().trim();
-
-            // 부칙이 없으면 오류 처리
-            if (latestVersion.isEmpty()) {
-                throw new IllegalStateException("부칙 텍스트를 찾을 수 없습니다. 페이지 형식을 점검하세요.");
+            String latestVersion = "";
+            if (!bls.isEmpty() && !sfons.isEmpty()) {
+                // 공백 제거 후 한 줄로 조합
+                String buChik = bls.get(0).text().replaceAll("\\s+", ""); // "부칙"
+                String dateInfo = sfons.get(0).text().trim();             // "제2024-12호, 2024.12.30."
+                latestVersion = buChik + " " + dateInfo;
+            } else {
+                throw new IllegalStateException("부칙 관련 요소를 찾을 수 없습니다. selector를 확인하세요.");
             }
 
-            // 2. 이전 저장된 버전 불러오기
+            // 2. 저장된 이전 버전 불러오기
             String lastVersion = loadLastVersion().trim();
 
-            // 3. 변경 비교
+            // 3. 비교 및 알림
             if (!latestVersion.equals(lastVersion)) {
                 System.out.println("🔔 부칙이 업데이트되었습니다: " + latestVersion);
                 EmailSender.send("[변경있다] 부칙이 업데이트되었습니다", latestVersion);
-                saveLatestVersion(latestVersion);  // 파일에 저장
+                saveLatestVersion(latestVersion); // 새로 저장
             } else {
                 System.out.println("부칙 변경 없음.");
                 EmailSender.send("[변경없다] 부칙 변경 없음", "금일 부칙에 변경 사항이 없습니다.");
