@@ -1,8 +1,8 @@
 name: Run KofiuMonitor on Weekdays Only
 
 on:
-  schedule:
-    - cron: '0 0 * * 1-5'  # 매주 월~금 오전 9시 (KST 기준)
+ # schedule:
+ #   - cron: '0 0 * * 1-5'  # 매주 월~금 오전 9시 (KST 기준)
   workflow_dispatch:       # 수동 실행도 가능
 
 jobs:
